@@ -24,8 +24,8 @@ public class MyUserDetailsService implements UserDetailsExService {
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
         System.out.println(
-                addUser(new MyUserDetails("admin",
-                        this.passwordEncoder.encode("admin"),
+                addUser(new MyUserDetails("admin@gmail.com",
+                        this.passwordEncoder.encode("adminul"),
                         new HashSet<>(List.of(roleService.getRoleByName("ROLE_ADMIN"))))));
     }
 
