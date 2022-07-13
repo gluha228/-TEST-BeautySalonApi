@@ -20,7 +20,6 @@ public class DynamicAntMatcherAnalog {
 
     public DynamicAntMatcherAnalog(RoleService roleService) {
         this.roleService = roleService;
-        System.out.println("threaf");
         actualize();
     }
 
@@ -34,8 +33,8 @@ public class DynamicAntMatcherAnalog {
         return false;
     }
 
-    //от предоставленных авторитис берёт только их название, так что если hibernate будет настроен с Lazy Loading,
-    //то пермишоны не будут грузиться просто так
+    //от предоставленных авторитис берёт только их название, так что если hibernate relation role <-> permission будет
+    //настроен с Lazy Loading, то пермишены не будут грузиться из бд просто так
     public void authorize(Collection<? extends GrantedAuthority> roles, String path) {
         if (rolesLocalStorage.stream()
                 //если роль в местном хранилище совпадает с одной из предоставленных
@@ -50,7 +49,7 @@ public class DynamicAntMatcherAnalog {
         new Thread(() -> {
             while (true) {
                 rolesLocalStorage = roleService.getAll();
-                System.out.println("it is");
+                System.out.println("rolesLocalStorage updated");
                 try {
                     Thread.sleep(refreshMinutes * 60000);
                 } catch (InterruptedException e) {

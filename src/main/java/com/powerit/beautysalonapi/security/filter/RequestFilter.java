@@ -40,6 +40,7 @@ public class RequestFilter extends OncePerRequestFilter {
 
             String header = request.getHeader("Authorization");
             logger.info("request: " + request.getRequestURI());
+            //тут можно заменить на список игнорируемых url
             if (!request.getRequestURI().startsWith("/auth") && header != null && header.startsWith("Bearer")) {
                 String token = header.substring(7);
                 String username = tokenService.validateAndParseAccess(token);
@@ -59,7 +60,7 @@ public class RequestFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (ResponseStatusException e) {
             response.setStatus(e.getRawStatusCode());
-            response.sendError(e.getRawStatusCode(), e.getMessage() + "gg");
+            response.sendError(e.getRawStatusCode(), e.getMessage());
         }
     }
 }
