@@ -1,5 +1,6 @@
 package com.powerit.beautysalonapi.mock;
 
+import com.powerit.beautysalonapi.security.exceptions.UserAlreadyExistsException;
 import com.powerit.beautysalonapi.security.toImpl.UserDetailsEx;
 import com.powerit.beautysalonapi.security.toImpl.UserDetailsExService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +24,16 @@ public class MyUserDetailsService implements UserDetailsExService {
     public MyUserDetailsService(PasswordEncoder passwordEncoder, RoleService roleService) {
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
-        System.out.println(
-                addUser(new MyUserDetails("admin@gmail.com",
-                        this.passwordEncoder.encode("adminul"),
-                        new HashSet<>(List.of(roleService.getRoleByName("ROLE_ADMIN"))))));
+        addUser(new MyUserDetails("admin@gmail.com",
+                this.passwordEncoder.encode("adminul"),
+                new HashSet<>(List.of(roleService.getRoleByName("ROLE_ADMIN")))));
     }
 
     @Override
-    public boolean addUser(UserDetailsEx user) {
+    public void addUser(UserDetailsEx user) throws UserAlreadyExistsException {
         System.out.println("add user" + user.getUsername());
-        if (loadUserByUsername(user.getUsername()) != null) return false;
-        return usersDetails.add(user);
+        if (loadUserByUsername(user.getUsername()) != null) throw new UserAlreadyExistsException();
+        usersDetails.add(user);
     }
 
     @Override
